@@ -1,14 +1,14 @@
-function TradingStyles()
+function TradingStyles(symbol,startvec,endvec,p0)
 
-%
 clc;clear;
 
-% The following data is a real data of 600016.ss, from Yahoo Finance.
+%% Data Import and Regularization.
 
-fprintf('Loading Historical Data ...\n\n')
-load('600016.mat')
+fprintf('Downloading Historical Data...\n\n')
+getData(symbol,startvec,endvec,cd);
 
-p0=8.49;
+
+%% Initialize Variables.
 pBuy=[p0];
 pSell=[];
 Money=10000-p0*100*1.005;
@@ -18,6 +18,7 @@ bDay=[1];
 Profitseries=zeros(250);
 T_profit=0;
 
+%%
 fprintf('The initial cost is 8.49.... Press enter to continue.\n\n');
 pause;
 
