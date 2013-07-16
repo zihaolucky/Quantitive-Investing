@@ -1,5 +1,8 @@
 function getData(symbols,startvec,endvec,directory)
-%% Quantitive-Investing
+%% ==================* Quantitive-Investing *==============================
+%        https://github.com/zihaolucky/Quantitive-Investing
+%
+%% ===================== Brief Introduction ===============================
 % getData 
 %   The source code was modify by zihaolucky for his project: Quantitive- 
 %   Investing (Github). 
@@ -13,15 +16,16 @@ function getData(symbols,startvec,endvec,directory)
 %% ============================= Notes ====================================
 %     This function would download and create the csv file separately. The
 %     data contains 'Date,Open,High,Low,Close,Volumn' items, but if you
-%     shall clean it first, the 'Volumn=0' as the market close, you may
-%     delete the row. (we have do that in TradingStyles.m)
+%     shall clean it first, the 'Volumn=0' as the market was closed, you may
+%     delete the row. (we have transformed original data to projected one,
+%     in our TradingStyles.m)
 %   
 %   symbols   -- the stocks'symbols;
 %   startvec  -- start_date;
 %   endvec    -- start_date;
 %   directory -- the csv file would save here.
 %
-%% ===================Honor Code by TA Developer============================
+%% =================== Honor Code by TA Developer =========================
 %   
 %   You can get the source code from:
 %      http://www.mathworks.cn/matlabcentral/fileexchange/...
@@ -49,6 +53,7 @@ urlEnd = [urlEnd '&g=d&ignore=.csv'];
 symbolVec=textscan(symbols,'%s', 'delimiter', ',');
 
 for cellSymbol=symbolVec{1}'
+    %% Data Fetch
     symbol=char(cellSymbol{1});    
     disp(['Downloading: ' symbol]);
     path = [ directory '/' symbol '.csv' ];
@@ -71,6 +76,11 @@ for cellSymbol=symbolVec{1}'
     fprintf(fileid, 'Date,Open,High,Low,Close,Volume\r\n');
     fprintf(fileid, '%s\r\n', csvCells{:});
     fclose(fileid);
+    
+    %% Data Regularization
+    range=datenum(endvec)-datenum(startvec);
+    regData(symbol,range);
 end
 
 end
+
