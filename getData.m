@@ -78,8 +78,7 @@ for cellSymbol=symbolVec{1}'
     fclose(fileid);
     
     %% Data Regularization
-    range=datenum(endvec)-datenum(startvec);
-    regData(symbol,range);
+    regData(symbol,noOfItems);
 end
 
 end
