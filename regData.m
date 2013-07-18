@@ -1,4 +1,4 @@
-function [Open,High,Low,Close]=regData(symbol,range)
+function [Open,High,Low,Close,items]=regData(symbol,range)
 %% ==================* Quantitive-Investing *==============================
 %      https://github.com/zihaolucky/Quantitive-Investing
 %
@@ -22,3 +22,4 @@ Open = [Data(:,1)];
 High = [Data(:,2)];
 Low  = [Data(:,3)];
 Close= [Data(:,4)];
+items = size(Close,1);

@@ -1,4 +1,4 @@
-function getData(symbols,startvec,endvec,directory)
+function [Open,High,Low,Close,items]=getData(symbols,startvec,endvec,directory)
 %% ==================* Quantitive-Investing *==============================
 %        https://github.com/zihaolucky/Quantitive-Investing
 %
@@ -78,7 +78,7 @@ for cellSymbol=symbolVec{1}'
     fclose(fileid);
     
     %% Data Regularization
-    regData(symbol,noOfItems);
+    [Open,High,Low,Close,items]=regData(symbol,noOfItems);
 end
 
 end
