@@ -17,6 +17,8 @@ path = [ cd '/' symbol '.csv' ];
 Data = csvread(path,1,1,[1,1,range,5]);
 % Clean data
 Data = Data(find(Data(:,5)>0),1:4);
+% Reverse
+Data = [Data(end:-1:1,:)];
 % Reconstruct them.
 Open = [Data(:,1)]; 
 High = [Data(:,2)];
