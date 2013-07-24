@@ -10,14 +10,14 @@ function test(symbol,startvec,endvec,Money,bRate,sRate,n,percent)
 %% Data Import and Regularization.
 
 fprintf('Downloading Historical Data...\n\n')
-[Open,High,Low,Close,items]=regData('600880.ss',144);
+[Open,High,Low,Close,items]=getData(symbol,startvec,endvec,cd);
 
 
 %% Initialize Variables.
 
 % initial price, usable money
 p0=Open(1);
-iniStocks=fix(Money*percent/(p0*100))
+iniStocks=fix(Money*percent/(p0*100));
 MoneyFree=Money-p0*iniStocks*100*1.005;
 % capital
 Capital=Close(1)*iniStocks*100+MoneyFree;
@@ -28,7 +28,7 @@ Value=Close(1)*100;
 S_cost=p0*1.005;
 
 % a vecot contains the buy & sell
-pBuy=[repmat(p0,[1,iniStocks])]
+pBuy=[repmat(p0,[1,iniStocks])];
 pSell=[];
 
 % sell, bug day
@@ -53,6 +53,7 @@ for i=2:items
     
     % when we don't have any stocks
     if size(pBuy,2)==0 && MoneyFree>Open(i)*fix(MoneyFree*percent/(Open(i)*100))*100*1.005
+            
         pBuy=[repmat(Open(i),[1,fix(MoneyFree*percent/(Open(i)*100))])];
         % a bug here when testing 600880.ss
         fprintf('Trading again !\n')
@@ -92,18 +93,20 @@ for i=2:items
             MoneyFree=MoneyFree+Open(i)*size(pBuy,2)*100*0.995;
             pBuy=[];
             S_cost=0;
+            sDay=[sDay,i];
             fprintf('Cost/share: %2.2f \n',S_cost)
         end
-        % sell out! save money
-%         if Capital<Money*0.9 && S_cost>0
-%             profit(i)=(Open(i)-S_cost)*size(pBuy,2)*100*n;
-%             fprintf('    Sell Out ! Go away...\n')
-%             fprintf('Price: %2.2f\n\n',Open(i))
-%             MoneyFree=MoneyFree+Open(i)*size(pBuy,2)*100*0.995;
-%             pBuy=[];
-%             S_cost=0;
-%             fprintf('Cost/share: %2.2f \n',S_cost)
-%         end
+        % sell out! STOP LOSS
+        if Capital<Money*0.95 && S_cost>0
+            profit(i)=(Open(i)-S_cost)*size(pBuy,2)*100;
+            fprintf('    Sell Out ! STOP LOSS...\n')
+            fprintf('Price: %2.2f\n\n',Open(i))
+            MoneyFree=MoneyFree+Open(i)*size(pBuy,2)*100*0.995;
+            pBuy=[];
+            S_cost=0;
+            sDay=[sDay,i];
+            fprintf('Cost/share: %2.2f \n',S_cost)
+        end
     end
     
 
@@ -129,9 +132,13 @@ fprintf('Finally, our Total Capital is %2.2f yuan.\n',Capital)
 
 %% Visualize the flatuation of price and profit
 
+
 figure(1);
 subplot(2,1,1);
-plot(1:items,Close,'linewidth',1.5,'color','r')
+plot(1:items,Close,'linewidth',1.3,'color','r')
+hold on
+plot(sDay,Close(sDay),'b.')
+plot(bDay,Close(bDay),'g.')
 title({symbol},'FontSize',12)
 s_date=[num2str(startvec(1)) '-' num2str(startvec(2)) '-' num2str(startvec(3))];
 ylabel('Close Price','FontSize',12)
@@ -147,8 +154,8 @@ xlabel({'Start from',s_date},'FontSize',12)
 ylabel('Capital','FontSize',12)
 legend('With Stretegy','Normal Style')
 
-figure(2)
-plot(1:items,profit,'r.')
-title({symbol,'Profit of'},'FontSize',12)
-xlabel({'Start from',s_date},'FontSize',12)
-ylabel('Yuan','FontSize',12)
+% figure(2)
+% plot(1:items,profit,'r.')
+% title({symbol,'Profit of'},'FontSize',12)
+% xlabel({'Start from',s_date},'FontSize',12)
+% ylabel('Yuan','FontSize',12)
