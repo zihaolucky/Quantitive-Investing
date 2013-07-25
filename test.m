@@ -11,6 +11,7 @@ function test(symbol,startvec,endvec,Money,bRate,sRate,n,percent)
 
 fprintf('Downloading Historical Data...\n\n')
 [Open,High,Low,Close,items]=getData(symbol,startvec,endvec,cd);
+%[Open,High,Low,Close,items]=regData(symbol,range);
 
 
 %% Initialize Variables.
@@ -154,8 +155,3 @@ xlabel({'Start from',s_date},'FontSize',12)
 ylabel('Capital','FontSize',12)
 legend('With Stretegy','Normal Style')
 
-% figure(2)
-% plot(1:items,profit,'r.')
-% title({symbol,'Profit of'},'FontSize',12)
-% xlabel({'Start from',s_date},'FontSize',12)
-% ylabel('Yuan','FontSize',12)
