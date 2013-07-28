@@ -1,4 +1,4 @@
-function M=SimpleMovingAverage(Close,indicator)
+function SimpleMovingAverage(Close,indicator)
 %% ==================* Quantitive-Investing *==============================
 %      https://github.com/zihaolucky/Quantitive-Investing
 %

@@ -1,4 +1,4 @@
-function test2(symbol,startvec,endvec,Money,bRate,sRate,n,percent)
+function test2(symbol,startvec,endvec,Money,bRate,sRate,n,percent,indicator)
 %% ==================* Quantitive-Investing *==============================
 %      https://github.com/zihaolucky/Quantitive-Investing
 %
@@ -8,8 +8,11 @@ function test2(symbol,startvec,endvec,Money,bRate,sRate,n,percent)
 % bRate - when the price is lower bRate percent of the cost
 
 %% Data Import and Regularization.
-
 fprintf('Downloading Historical Data...\n\n')
+
+% for latter use 
+startvec2=datevec(datenum(startvec)-indicator(end));
+[Open2,High2,Low2,Close2,items2]=getData(symbol,startvec2,endvec,cd);
 [Open,High,Low,Close,items]=getData(symbol,startvec,endvec,cd);
 %[Open,High,Low,Close,items]=regData(symbol,range);
 
@@ -135,7 +138,7 @@ fprintf('Finally, our Total Capital is %2.2f yuan.\n',Capital)
 figure(1);
 plot(1:items,Close,'linewidth',1.3,'color','r')
 hold on
-SimpleMovingAverage(Close,[20 60])
+SimpleMovingAverage(Close2,indicator);
 title({symbol},'FontSize',12)
 s_date=[num2str(startvec(1)) '-' num2str(startvec(2)) '-' num2str(startvec(3))];
 ylabel('Price','FontSize',12)
