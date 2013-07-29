@@ -1,4 +1,4 @@
-function test(symbol,startvec,endvec,Money,bRate,sRate,n,percent)
+function test(symbol,startvec,endvec,Money,bRate,sRate,n,percent,stoploss)
 %% ==================* Quantitive-Investing *==============================
 %      https://github.com/zihaolucky/Quantitive-Investing
 %
@@ -98,7 +98,7 @@ for i=2:items
             fprintf('Cost/share: %2.2f \n',S_cost)
         end
         % sell out! STOP LOSS
-        if Capital<Money*0.95 && S_cost>0
+        if Capital<Money*(1-stoploss) && S_cost>0
             profit(i)=(Open(i)-S_cost)*size(pBuy,2)*100;
             fprintf('    Sell Out ! STOP LOSS...\n')
             fprintf('Price: %2.2f\n\n',Open(i))
