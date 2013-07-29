@@ -12,9 +12,8 @@ fprintf('Downloading Historical Data...\n\n')
 
 % for latter use 
 startvec2=datevec(datenum(startvec)-indicator(end));
-[Open2,High2,Low2,Close2,items2]=getData(symbol,startvec2,endvec,cd);
-[Open,High,Low,Close,items]=getData(symbol,startvec,endvec,cd);
-%[Open,High,Low,Close,items]=regData(symbol,range);
+%[Open,High,Low,Close,items]=getData(symbol,startvec2,endvec,cd);
+[Open,High,Low,Close,items]=regData(symbol,146);
 
 
 %% Initialize Variables.
@@ -41,14 +40,18 @@ bDay=[1];
 
 % total profit, profit/day
 T_profit=0;
+
 profit=zeros(1,items); 
 
+% Average Price & gradient MA.
+[Short,Med,Long]=SimpleMovingAverage(Close,indicator);
+[gra_S,gra_M,gra_L]=graMA(Short,Med,Long);
 
 %%
 fprintf('The initial price is %2.2f.... Press enter to continue.\n\n',p0);
 pause;
 
-
+%% first method: no average price calculation.
 for i=2:items
 
     fprintf('---- Day %d ----\n',i)
@@ -57,7 +60,6 @@ for i=2:items
     
     % when we don't have any stocks
     if size(pBuy,2)==0 && MoneyFree>Open(i)*fix(MoneyFree*percent/(Open(i)*100))*100*1.005
-            
         pBuy=[repmat(Open(i),[1,fix(MoneyFree*percent/(Open(i)*100))])];
         % a bug here when testing 600880.ss
         fprintf('Trading again !\n')
@@ -90,7 +92,7 @@ for i=2:items
             fprintf('Cost/share: %2.2f \n',S_cost)
         end
         % arbitrage--sell out!
-        if S_cost<=Open(i)*0.9 && S_cost>0
+        if S_cost<=Open(i)*0.8 && S_cost>0
             profit(i)=(Open(i)-S_cost)*size(pBuy,2)*100*n;
             fprintf(' Arbitrary.   Sell Out !\n')
             fprintf('Price: %2.2f\n\n',Open(i))
@@ -101,7 +103,7 @@ for i=2:items
             fprintf('Cost/share: %2.2f \n',S_cost)
         end
         % sell out! STOP LOSS
-        if Capital<Money*0.95 && S_cost>0
+        if gra_S(i-1)+gra_M(i-1)+gra_L(i-1)<=0 && S_cost>0 
             profit(i)=(Open(i)-S_cost)*size(pBuy,2)*100;
             fprintf('    Sell Out ! STOP LOSS...\n')
             fprintf('Price: %2.2f\n\n',Open(i))
@@ -120,13 +122,6 @@ for i=2:items
     
     T_profit=T_profit+profit(i);
     capital=[capital Capital];
-%     fprintf('Cost/share: %2.2f \n',S_cost)
-%     fprintf('Total profit: %2.2f \n',T_profit)
-%     fprintf('Value : %2.2f \n',Value)
-%     fprintf('Capital: %2.2f \n',Capital)
-%     fprintf('MoneyFree: %2.2f \n',MoneyFree)
-%     
-%     fprintf('Stocks left: %d \n\n',n*size(pBuy,2))
 end
 
 fprintf('Trading end... \n\n')
@@ -136,10 +131,25 @@ fprintf('Finally, our Total Capital is %2.2f yuan.\n',Capital)
 
 %% Visualize the flatuation of price and profit
 figure(1);
+subplot(2,1,1)
 plot(1:items,Close,'linewidth',1.3,'color','r')
 hold on
-SimpleMovingAverage(Close2,indicator);
+
+plot(sDay,Close(sDay),'b.')
+plot(bDay,Close(bDay),'g.')
 title({symbol},'FontSize',12)
 s_date=[num2str(startvec(1)) '-' num2str(startvec(2)) '-' num2str(startvec(3))];
 ylabel('Price','FontSize',12)
 hold off
+
+%
+subplot(2,1,2)
+N=fix(Money/(Open(1)*100));
+Moneyfree=Money-N*Open(1)*100;
+plot(1:items,capital,'linewidth',1.3,'color','b')
+hold on
+plot(1:items,Close*100*N+Moneyfree,'linewidth',1.3,'color','r')
+title('Comparison','FontSize',12)
+xlabel({'Start from',s_date},'FontSize',12)
+ylabel('Capital','FontSize',12)
+legend('With Stretegy','Normal Style')
