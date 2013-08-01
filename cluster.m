@@ -31,14 +31,14 @@ if index(1)==low_index(1)
     for i=1:2:n-1
         up_index=[up_index,index(i):index(i)+range(i)-1];
     end
-    for i=2:2:n
+    for i=2:2:n-1
         down_index=[down_index,index(i):index(i)+range(i)-1];
     end
 else
     for i=1:2:n-1
         down_index=[down_index,index(i):index(i)+range(i)-1];
     end
-    for i=2:2:n
+    for i=2:2:n-1
         up_index=[up_index,index(i):index(i)+range(i)-1];
     end
 end
@@ -52,13 +52,13 @@ down_L=gra_L(down_index);
 down_M=gra_M(down_index);
 
 %% Plot
-scatter3(low_S,low_M,low_L,'MarkerEdgeColor','k','MarkerFaceColor',[0 .75 .75])
+%scatter3(low_S,low_M,low_L,'MarkerEdgeColor','k','MarkerFaceColor',[0 .75 .75])
 hold on
-fprintf('Lowest plotted. Press return to continue.\n\n')
-pause;
-scatter3(high_S,high_M,high_L,'MarkerEdgeColor','k','MarkerFaceColor',[1 .75 .75])
-fprintf('Highest plotted. Press return to continue.\n\n')
-pause;
+%fprintf('Lowest plotted. Press return to continue.\n\n')
+%pause;
+%scatter3(high_S,high_M,high_L,'MarkerEdgeColor','k','MarkerFaceColor',[1 .75 .75])
+%fprintf('Highest plotted. Press return to continue.\n\n')
+%pause;
 scatter3(up_S,up_M,up_L,'MarkerEdgeColor','k','MarkerFaceColor',[1 1 .25])
 fprintf('Up plotted. Press return to continue.\n\n')
 pause;
