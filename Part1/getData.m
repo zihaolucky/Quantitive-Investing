@@ -1,4 +1,4 @@
-function [Open,High,Low,Close,items]=getData(symbols,startvec,endvec,directory)
+function [Open,High,Low,Close,row]=getData(StockName,StartDate,EndDate)
 %% ==================* Quantitive-Investing *==============================
 %        https://github.com/zihaolucky/Quantitive-Investing
 %
@@ -12,74 +12,48 @@ function [Open,High,Low,Close,items]=getData(symbols,startvec,endvec,directory)
 %     historical data in the C:\StockData directory:
 %
 %     getData('000002.sz,600016.ss',[2013,5,1],[2013,7,1],'C:\StockData');
-%
-%% ============================= Notes ====================================
-%     This function would download and create the csv file separately. The
-%     data contains 'Date,Open,High,Low,Close,Volumn' items, but if you
-%     shall clean it first, the 'Volumn=0' as the market was closed, you may
-%     delete the row. (we have transformed original data to projected one,
-%     in our TradingStyles.m)
-%   
-%   symbols   -- the stocks'symbols;
-%   startvec  -- start_date;
-%   endvec    -- start_date;
-%   directory -- the csv file would save here.
-%
-%% =================== Honor Code by TA Developer =========================
-%   
-%   You can get the source code from:
-%      http://www.mathworks.cn/matlabcentral/fileexchange/...
-%      39858-download-yahoo-finance-data-for-trading-and-backtesting
-%   
-%   Author: TA Developer Pty Ltd (www.tadeveloper.com)
-%
-%%
-% text data
-posdate     = 1;
 
-% numerical data
-posopen     = 1;
-poshigh     = 2;
-poslow      = 3;
-posclose    = 4;
-posvolume   = 5;
-posadjclose = 6;
+%数据时间区间
+startdate=StartDate;
+enddate=EndDate;
 
-urlStart = 'http://ichart.finance.yahoo.com/table.csv?s=';
-urlEnd = [ '&a=' num2str(startvec(2)-1) '&b=' num2str(startvec(3)) '&c=' num2str(startvec(1))];
-urlEnd = [urlEnd '&d=' num2str(endvec(2)-1) '&e=' num2str(endvec(3)) '&f=' num2str(endvec(1))];
-urlEnd = [urlEnd '&g=d&ignore=.csv'];
+%字符串变化
+ms=num2str(str2num(datestr(startdate, 'mm'))-1);
+ds=datestr(startdate, 'dd');
+ys=datestr(startdate, 'yyyy');
+me=num2str(str2num(datestr(enddate, 'mm'))-1);
+de=datestr(enddate, 'dd');
+ye=datestr(enddate, 'yyyy');
+ 
+url2Read=sprintf('http://ichart.finance.yahoo.com/table.csv?s=%s&amp;a=%s&amp;b=%s&amp;c=%s&amp;d=%s&amp;e=%s&amp;f=%s&amp;g=%s&amp;ignore=.csv', StockName, ms, ds, ys, me, de, ye, 'd');
+s=urlread(url2Read);
+ 
+[Date Open High Low Close Volume AdjClose]=strread (s, '%s %s %s %s %s %s %s', 'delimiter', ',');
 
-symbolVec=textscan(symbols,'%s', 'delimiter', ',');
+Date(1)=[];
+AdjClose(1)=[];
+Open(1)=[];
+High(1)=[];
+Low(1)=[];
+row=size(Date, 1);
 
-for cellSymbol=symbolVec{1}'
-    %% Data Fetch
-    symbol=char(cellSymbol{1});    
-    disp(['Downloading: ' symbol]);
-    path = [ directory '/' symbol '.csv' ];
-    url = [ urlStart symbol urlEnd ];    
-    urlwrite(url, path);
-    data = importdata(path,',',1);
-    adjfactor = data.data(:,posadjclose) ./ data.data(:,posclose);
-    open = adjfactor .* data.data(:,posopen);
-    high = adjfactor .* data.data(:,poshigh);
-    low = adjfactor .* data.data(:,poslow);
-    close = adjfactor .* data.data(:,posclose);
-    volume = data.data(:,posvolume);
-
-    noOfItems = size(close, 1);
-
-    csvSeparator = repmat(',',noOfItems,1);
-    csvText=strcat(char(data.textdata(2:noOfItems+1,posdate)),csvSeparator,num2str(open),csvSeparator,num2str(high),csvSeparator,num2str(low),csvSeparator,num2str(close),csvSeparator,num2str(volume));
-    csvCells=cellstr(csvText);
-    fileid=fopen(path,'w');
-    fprintf(fileid, 'Date,Open,High,Low,Close,Volume\r\n');
-    fprintf(fileid, '%s\r\n', csvCells{:});
-    fclose(fileid);
-    
-    %% Data Regularization
-    [Open,High,Low,Close,items]=regData(symbol,noOfItems);
+for i = 1:row
+    Date_temp(i, 1)=datenum(cell2mat(Date(i)), 'yyyy-mm-dd');
+    AdjClose_temp(i, 1)=str2num(cell2mat(AdjClose(i)));
+    Open_temp(i,1)=str2num(cell2mat(Open(i)));
+    High_temp(i,1)=str2num(cell2mat(High(i)));
+    Low_temp(i,1)=str2num(cell2mat(Low(i)));
 end
 
-end
+DateV=Date_temp(end:-1:1);
+Close=AdjClose_temp(end:-1:1);
+Open=Open_temp(end:-1:1);
+High=High_temp(end:-1:1);
+Low=Low_temp(end:-1:1);
 
+%存储M文件
+% root=[pwd, '\'];
+% filename=[root, StockName, '.mat'];
+% save(filename, 'stock_Price') ;
+ 
+end

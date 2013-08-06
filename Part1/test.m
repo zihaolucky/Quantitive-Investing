@@ -1,4 +1,4 @@
-function test(symbol,startvec,endvec,Money,bRate,sRate,n,percent,stoploss)
+function test(symbol,t_start,t_end,Money,bRate,sRate,n,percent,stoploss)
 %% ==================* Quantitive-Investing *==============================
 %      https://github.com/zihaolucky/Quantitive-Investing
 %
@@ -10,7 +10,7 @@ function test(symbol,startvec,endvec,Money,bRate,sRate,n,percent,stoploss)
 %% Data Import and Regularization.
 
 fprintf('Downloading Historical Data...\n\n')
-[Open,High,Low,Close,items]=getData(symbol,startvec,endvec,cd);
+[Open,High,Low,Close,items]=getData(symbol,t_start,t_end)
 %[Open,High,Low,Close,items]=regData(symbol,range);
 
 
@@ -141,7 +141,7 @@ hold on
 plot(sDay,Close(sDay),'b.')
 plot(bDay,Close(bDay),'g.')
 title({symbol},'FontSize',12)
-s_date=[num2str(startvec(1)) '-' num2str(startvec(2)) '-' num2str(startvec(3))];
+s_date=[num2str(t_start(1)) '-' num2str(t_start(2)) '-' num2str(t_start(3))];
 ylabel('Close Price','FontSize',12)
 
 subplot(2,1,2);
