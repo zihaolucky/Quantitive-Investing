@@ -12,8 +12,8 @@ fprintf('Downloading Historical Data...\n\n')
 
 % for latter use 
 startvec2=datevec(datenum(startvec)-indicator(end));
-%[Open,High,Low,Close,items]=getData(symbol,startvec2,endvec,cd);
-[Open,High,Low,Close,items]=regData(symbol,146);
+[Open,High,Low,Close,items]=getData(symbol,startvec,endvec);
+
 
 
 %% Initialize Variables.
