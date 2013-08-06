@@ -64,4 +64,3 @@ fprintf('Up plotted. Press return to continue.\n\n')
 pause;
 scatter3(down_S,down_M,down_L,'MarkerEdgeColor','k','MarkerFaceColor',[1 0 .25])
 fprintf('Down plotted. Press return to continue.\n\n')
-pause;
