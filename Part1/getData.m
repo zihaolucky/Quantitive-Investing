@@ -51,9 +51,8 @@ Open=Open_temp(end:-1:1);
 High=High_temp(end:-1:1);
 Low=Low_temp(end:-1:1);
 
-%´æ´¢MÎÄ¼þ
-% root=[pwd, '\'];
-% filename=[root, StockName, '.mat'];
-% save(filename, 'stock_Price') ;
- 
+% save the data as .mat
+filename=[StockName, '.mat'];
+save(filename,'Open','High','Low','Close') ;
+
 end
