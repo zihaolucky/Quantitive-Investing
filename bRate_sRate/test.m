@@ -1,4 +1,4 @@
-function Capital=test(symbol,Money,bRate,sRate,n,percent,stoploss)
+function Capital=test(symbol,Money,bRate,sRate,n,percent,arbitrage,stoploss)
 %% ==================* Quantitive-Investing *==============================
 %      https://github.com/zihaolucky/Quantitive-Investing
 %
@@ -42,57 +42,58 @@ profit=zeros(1,items);
 
 %% Trading...
 
-for i=2:items
+for k=2:items
     
     % when we don't have any stocks
-    if size(pBuy,2)==0 && MoneyFree>Open(i)*fix(MoneyFree*percent/(Open(i)*100))*100*1.005
+    if size(pBuy,2)==0 && MoneyFree>Open(k)*fix(MoneyFree*percent/(Open(k)*100))*100*1.005
             
-        pBuy=[repmat(Open(i),[1,fix(MoneyFree*percent/(Open(i)*100))])];
+        pBuy=[repmat(Open(k),[1,fix(MoneyFree*percent/(Open(k)*100))])];
         % a bug here when testing 600880.ss
-        MoneyFree=MoneyFree-pBuy(end)*fix(MoneyFree*percent/(Open(i)*100))*100*1.005;
-        bDay=[bDay,i];
+        MoneyFree=MoneyFree-pBuy(end)*fix(MoneyFree*percent/(Open(k)*100))*100*1.005;
+        bDay=[bDay,k];
         S_cost=mean(pBuy);
     end
     
     % we have stocks
     if size(pBuy)>0
-        if S_cost*(1-bRate)>Low(i) && MoneyFree>S_cost*(1-bRate)*n*100*1.005
+        if S_cost*(1-bRate)>Low(k) && MoneyFree>S_cost*(1-bRate)*n*100*1.005
             pBuy=[pBuy,repmat(pBuy(end)*(1-bRate),[1,n])];
             MoneyFree=MoneyFree-pBuy(end)*n*100*1.005;
-            bDay=[bDay,i];
+            bDay=[bDay,k];
             S_cost=mean(pBuy);
         end
         % to make sure this part is doing T
-        if pBuy(end)*(1+sRate)<High(i) && Low(i)<pBuy(end)*(1+sRate) && size(pBuy,2)>iniStocks
-            profit(i)=pBuy(end)*sRate*n*100*0.995;
-            sDay=[sDay,i];
+        if pBuy(end)*(1+sRate)<High(k) && Low(k)<pBuy(end)*(1+sRate) && size(pBuy,2)>iniStocks
+            profit(k)=pBuy(end)*sRate*n*100*0.995;
+            sDay=[sDay,k];
             MoneyFree=MoneyFree+pBuy(end)*n*100*0.995;
             pBuy=[pBuy(1:end-n)];
-            S_cost=(sum(pBuy)*100-profit(i))/(size(pBuy,2)*100);
+            S_cost=(sum(pBuy)*100-profit(k))/(size(pBuy,2)*100);
         end
         % arbitrage--sell out!
-        if S_cost<=Open(i)*0.85 && S_cost>0
-            profit(i)=(Open(i)-S_cost)*size(pBuy,2)*100*n;
-            MoneyFree=MoneyFree+Open(i)*size(pBuy,2)*100*0.995;
+        if S_cost<=Open(k)*(1-arbitrage) && S_cost>0
+            profit(k)=(Open(k)-S_cost)*size(pBuy,2)*100*n;
+            MoneyFree=MoneyFree+Open(k)*size(pBuy,2)*100*0.995;
             pBuy=[];
             S_cost=0;
-            sDay=[sDay,i];
+            sDay=[sDay,k];
         end
         % sell out! STOP LOSS
         if Capital<Money*(1-stoploss) && S_cost>0
-            profit(i)=(Open(i)-S_cost)*size(pBuy,2)*100;
-            MoneyFree=MoneyFree+Open(i)*size(pBuy,2)*100*0.995;
+            profit(k)=(Open(k)-S_cost)*size(pBuy,2)*100;
+            MoneyFree=MoneyFree+Open(k)*size(pBuy,2)*100*0.995;
             pBuy=[];
             S_cost=0;
-            sDay=[sDay,i];
+            sDay=[sDay,k];
         end
     end
     
     
-    Value=(Close(i)*size(pBuy,2)*100);
+    Value=(Close(k)*size(pBuy,2)*100);
     Capital=Value+MoneyFree;
     
-    T_profit=T_profit+profit(i);
+    T_profit=T_profit+profit(k);
     capital=[capital Capital];
 end
 
+end
