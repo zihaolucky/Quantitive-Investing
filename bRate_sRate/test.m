@@ -45,7 +45,8 @@ profit=zeros(1,items);
 for k=2:items
     
     % when we don't have any stocks
-    if size(pBuy,2)==0 && MoneyFree>Open(k)*fix(MoneyFree*percent/(Open(k)*100))*100*1.005
+    if size(pBuy,2)==0 && MoneyFree>Open(k)*fix(MoneyFree*percent/(Open(k)*100))*100*1.005 &&...
+            1
             
         pBuy=[repmat(Open(k),[1,fix(MoneyFree*percent/(Open(k)*100))])];
         % a bug here when testing 600880.ss

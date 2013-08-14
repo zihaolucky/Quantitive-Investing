@@ -1,4 +1,4 @@
-function [Open,High,Low,Close,row]=getData(StockName,StartDate,EndDate)
+function getData(StockName,StartDate,EndDate)
 %% ==================* Quantitive-Investing *==============================
 %        https://github.com/zihaolucky/Quantitive-Investing
 %
