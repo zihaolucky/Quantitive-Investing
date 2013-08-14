@@ -13,4 +13,5 @@
 ##### Compare  
 现在将做比较。我们之前用2011-2012的数据，找到了`best_buy1`,`best_sell1`。那么现在就要用2012-2013的数据进行对比测试。  
 1. 将得到的`best_buy1`,`best_sell1`带入`best_test`中得到2012-2013年度的`Capital #1`，(此处得到的是基于2011-2012数据得到的参数)
+
 2. 得到的`best_buy2`,`best_sell2`带入`best_test`中得到2012-2013年度的`Capital #2` (此处的`best_buy2`,`best_sell2`是最佳参数，因为我们是这上面做优化的)
