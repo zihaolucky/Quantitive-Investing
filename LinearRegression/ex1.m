@@ -1,5 +1,9 @@
 function [test1,error1,test2,error2]=ex1(symbol)
-%% Initialization
+%% Instruction
+% The ex1.m focus on using the linear regression method to predict the
+% price, while testing its performance in test set, it can keep the track
+% with the real price of the specific stock. However, it's not a simulation
+% system in ex1.m and we'll release the ex2.m to make it further.
 
 %% ================ Part 1: Feature Normalization ================
 
