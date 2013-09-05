@@ -32,28 +32,31 @@ s=urlread(url2Read);
 
 Date(1)=[];
 AdjClose(1)=[];
-Open(1)=[];
-High(1)=[];
-Low(1)=[];
+Volume(1)=[];
 row=size(Date, 1);
 items=row;
 
 for i = 1:row
     Date_temp(i, 1)=datenum(cell2mat(Date(i)), 'yyyy-mm-dd');
     AdjClose_temp(i, 1)=str2num(cell2mat(AdjClose(i)));
-    Open_temp(i,1)=str2num(cell2mat(Open(i)));
-    High_temp(i,1)=str2num(cell2mat(High(i)));
-    Low_temp(i,1)=str2num(cell2mat(Low(i)));
+    Volume_temp(i,1)=str2num(cell2mat(Volume(i)));
 end
 
+
+%% clean data
+
+% Reverse
 DateV=Date_temp(end:-1:1);
 Close=AdjClose_temp(end:-1:1);
-Open=Open_temp(end:-1:1);
-High=High_temp(end:-1:1);
-Low=Low_temp(end:-1:1);
+Volume=Volume_temp(end:-1:1);
+
+% clean
+Volume = Volume(find(Volume>0));
+Close = Close(find(Volume>0));
+items = size(Close,1);
 
 % save the data as .mat
 filename=[StockName, '.mat'];
-save(filename,'Open','High','Low','Close','items') ;
+save(filename,'Close','items','Volume') ;
 
 end

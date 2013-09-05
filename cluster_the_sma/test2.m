@@ -2,19 +2,6 @@ function test2(symbol,startvec,endvec,Money,bRate,sRate,n,percent,indicator)
 %% ==================* Quantitive-Investing *==============================
 %      https://github.com/zihaolucky/Quantitive-Investing
 %
-%% Instructions
-% symbol - symbol of the stock
-% startvec,endevc - begin and end date as a vector
-% bRate - when the price is lower bRate percent of the cost
-
-%% Data Import and Regularization.
-fprintf('Downloading Historical Data...\n\n')
-
-% for latter use 
-startvec2=datevec(datenum(startvec)-indicator(end));
-[Open,High,Low,Close,items]=getData(symbol,startvec,endvec);
-
-
 
 %% Initialize Variables.
 
@@ -41,7 +28,7 @@ bDay=[1];
 % total profit, profit/day
 T_profit=0;
 
-profit=zeros(1,items); 
+profit=zeros(1,items);
 
 % Average Price & gradient MA.
 [Short,Med,Long]=SimpleMovingAverage(Close,indicator);
@@ -72,7 +59,8 @@ for i=2:items
     
     % we have stocks
     if size(pBuy)>0
-        if S_cost*(1-bRate)>Low(i) && MoneyFree>S_cost*(1-bRate)*n*100*1.005
+        if S_cost*(1-bRate)>Low(i) && MoneyFree>S_cost*(1-bRate)*n*100*1.005 &&...
+                
             pBuy=[pBuy,repmat(pBuy(end)*(1-bRate),[1,n])];
             fprintf('    Buy!\n')
             fprintf('Price: %2.2f\n',pBuy(end))

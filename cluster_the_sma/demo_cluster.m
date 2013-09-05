@@ -1,9 +1,9 @@
-function [UP,DOWN]=cluster(Close)
+function [LOW,HIGH,UP,DOWN]=demo_cluster(symbol,t_start,t_end)
 
 %% Data import
+[Open,High,Low,Close,items]=getData(symbol,t_start,t_end);
 [Short,Med,Long]=SimpleMovingAverage(Close,[5 20 60]);
 [gra_S,gra_M,gra_L]=graMA(Short,Med,Long);
-
 
 %% Calculation
 % lowest and highest
@@ -54,3 +54,20 @@ down_L=gra_L(down_index);
 down_M=gra_M(down_index);
 DOWN=[down_S,down_M,down_L];
 
+%% Plot
+scatter3(low_S,low_M,low_L,'MarkerEdgeColor','k','MarkerFaceColor',[0 .75 .75])
+hold on
+fprintf('Lowest plotted. Press return to continue.\n\n')
+%pause;
+scatter3(high_S,high_M,high_L,'MarkerEdgeColor','k','MarkerFaceColor',[1 .75 .75])
+fprintf('Highest plotted. Press return to continue.\n\n')
+%pause;
+scatter3(up_S,up_M,up_L,'MarkerEdgeColor','k','MarkerFaceColor',[1 1 .25])
+fprintf('Up plotted. Press return to continue.\n\n')
+%pause;
+scatter3(down_S,down_M,down_L,'MarkerEdgeColor','k','MarkerFaceColor',[1 0 .25])
+fprintf('Down plotted. Press return to continue.\n\n')
+
+%% Save data
+filename=['highest_lowest', '.mat'];
+save(filename,'LOW','HIGH');
