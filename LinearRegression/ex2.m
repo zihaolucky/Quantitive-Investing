@@ -1,23 +1,21 @@
 function [test1,error1,test2,error2]=ex2(symbol)
 %% Initialization
+% In ex2.m, we built a model based on linear regression to simulate the
+% flatuation of a stock.
 
 %% ================ Part 1: Feature Normalization ================
 
 fprintf('Loading data ...\n');
 
 %% Load Data
-getData(symbol,'1/1/2008','7/1/2013');
+% getData(symbol,'1/1/2011','1/1/2012');
 dir_data=[symbol,'.mat'];
 load(dir_data);
 
 %% Data Initialization
 [Short,Med,Long]=SimpleMovingAverage(Close,[5 20 60]);
-x1=Close-Short;
-x2=Close-Med;
-x3=Close-Long;
-
 tomorrow=Close(2:end);
-data=[Close(1:end-1),x1(1:end-1),x2(1:end-1),x3(1:end-1),...
+data=[Close(1:end-1),Short(1:end-1),Med(1:end-1),Long(1:end-1),...
     Volume(1:end-1),tomorrow];
 data=data(61:end,:);
 
@@ -77,11 +75,11 @@ error2=mean(abs(test2(:,2)-test2(:,1))./y_test(1:end-1));
 plot(1:0.7*items,Close(1:0.7*end),'r.')
 hold on
 plot(0.7*items:items,Close(0.7*items:items),'b.')
-% plot(0.7*n:n,predict_y2,'y.')
 hold off
 
+
 figure;
-plot3(Short(1:0.7*end),Med(1:0.7*end),Close(1:0.7*end),'r.')
+plot(1:size(predict_y2),predict_y2,'b.')
 hold on
-plot3(Short(0.7*end:end),Med(0.7*end:end),Close(0.7*end:end),'b.')
+plot(1:size(predict_y2),y_test(1:end-1),'r.')
 
