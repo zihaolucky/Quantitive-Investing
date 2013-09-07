@@ -13,18 +13,19 @@ dir_data=[symbol,'.mat'];
 load(dir_data);
 
 %% Data Initialization
-[Short,Med,Long]=SimpleMovingAverage(Close,[5 20 60]);
-tomorrow=Close(2:end);
-data=[Close(1:end-1),Short(1:end-1),Med(1:end-1),Long(1:end-1),...
-    Volume(1:end-1),tomorrow];
+
+% 使用前70%的数据进行模型训练
+[Short,Med,Long]=SimpleMovingAverage(Close(1:0.7*end),[5 20 60]);
+tomorrow=Close(2:0.7*end);
+data=[Close(1:0.7*end-1),Short(1:end-1),Med(1:end-1),Long(1:end-1),...
+    Volume(1:0.7*end-1),tomorrow];
 data=data(61:end,:);
 
-X = data(1:0.7*end, 1:5);
-X_test = data(0.7*end:end, 1:5);
-y = data(1:0.7*end, 6);
-y_test = data(0.7*end:end, 6);
+X = data(1:end, 1:5);
+y = data(1:end, 6);
+
+y_test = Close(0.7*end:end);
 m = length(y);
-n = length(y_test);
 
 % Scale features and set them to zero mean
 fprintf('Normalizing Features ...\n');
@@ -33,7 +34,7 @@ fprintf('Normalizing Features ...\n');
 
 % Add intercept term to X
 X = [ones(m, 1) X];
-X_test = [ones(n, 1) X_test];
+
 
 %% ================ Part 2: Gradient Descent ================
 
@@ -48,17 +49,17 @@ theta = zeros(6, 1);
 [theta, J_history] = gradientDescentMulti(X, y, theta, alpha, num_iters);
 
 % % Plot the convergence graph
-% figure;
-% plot(1:numel(J_history), J_history, '-b', 'LineWidth', 2);
-% xlabel('Number of iterations');
-% ylabel('Cost J');
+figure;
+plot(1:numel(J_history), J_history, '-b', 'LineWidth', 2);
+xlabel('Number of iterations');
+ylabel('Cost J');
 
 % Display gradient descent's result
 fprintf('Theta computed from gradient descent: \n');
 fprintf(' %f \n', theta);
 fprintf('\n');
 
-%% Predict and test
+%% Predict & Simulate
 
 % part #1
 predict_y1=X(1:end-1,:)*theta;
@@ -67,9 +68,9 @@ test1=[predict_y1,y];
 error1=mean(abs(test1(:,2)-test1(:,1))./y);
 
 % part #2
-predict_y2=X_test(1:end-1,:)*theta;
-test2=[predict_y2,y_test(1:end-1)];
-error2=mean(abs(test2(:,2)-test2(:,1))./y_test(1:end-1));
+Close=[Close(1:0.7*end),predict_y1];
+[Short,Med,Long]=SimpleMovingAverage(Close(1:0.7*end),[5 20 60]);
+
 
 %% plot
 plot(1:0.7*items,Close(1:0.7*end),'r.')
