@@ -1,4 +1,4 @@
-function [test1,error1,test2,error2]=ex1(symbol)
+function [test1,error1,test2,error2]=ex1(symbol,ma1,ma2,ma3)
 %% Instruction
 % The ex1.m focus on using the linear regression method to predict the
 % price, while testing its performance in test set, it can keep the track
@@ -15,11 +15,11 @@ dir_data=[symbol,'.mat'];
 load(dir_data);
 
 %% Data Initialization
-[Short,Med,Long]=SimpleMovingAverage(Close,[5 20 60]);
+[Short,Med,Long]=SimpleMovingAverage(Close,[ma1 ma2 ma3]);
 tomorrow=Close(2:end);
 data=[Close(1:end-1),Short(1:end-1),Med(1:end-1),Long(1:end-1),...
     Volume(1:end-1),tomorrow];
-data=data(61:end,:);
+data=data(ma3+1:end,:);
 
 X = data(1:0.7*end, 1:5);
 X_test = data(0.7*end:end, 1:5);
