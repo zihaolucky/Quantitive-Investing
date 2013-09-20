@@ -50,9 +50,10 @@ Close=AdjClose_temp(end:-1:1);
 Open=Open_temp(end:-1:1);
 High=High_temp(end:-1:1);
 Low=Low_temp(end:-1:1);
+items=size(Close);
 
 % save the data as .mat
 filename=[StockName, '.mat'];
-save(filename,'Open','High','Low','Close') ;
+save(filename,'Open','High','Low','Close','items') ;
 
 end
