@@ -9,7 +9,7 @@ for i=1:size(A)
         continue
     else
         tStart=tic;
-        getData(symbol,[2008,1,1],[2013,5,1]);
+        getData(symbol,[2008,1,1],[2013,7,1]);
         tElapsed=toc(tStart);
         fprintf(' %s download finished.\n Time: %f\n\n',symbol,tElapsed)
     end
