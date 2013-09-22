@@ -17,6 +17,7 @@ load(dir_data);
 %% Initialize Variables.
 
 % initial price, usable money
+items=size(Close,1);
 p0=Open(1);
 iniStocks=fix(Money*percent/(p0*100));
 MoneyFree=Money-p0*iniStocks*100*1.005;
@@ -39,6 +40,7 @@ bDay=[1];
 % total profit, profit/day
 T_profit=0;
 profit=zeros(1,items); 
+
 
 %% Trading...
 

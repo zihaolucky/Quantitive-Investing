@@ -1,4 +1,4 @@
-function test(symbol,t_start,t_end,Money,bRate,sRate,n,percent,stoploss)
+function test(symbol,Money,bRate,sRate,n,percent,stoploss)
 %% ==================* Quantitive-Investing *==============================
 %      https://github.com/zihaolucky/Quantitive-Investing
 %
@@ -10,13 +10,15 @@ function test(symbol,t_start,t_end,Money,bRate,sRate,n,percent,stoploss)
 %% Data Import and Regularization.
 
 fprintf('Downloading Historical Data...\n\n')
-[Open,High,Low,Close,items]=getData(symbol,t_start,t_end)
+%[Open,High,Low,Close,items]=getData(symbol,t_start,t_end)
 %[Open,High,Low,Close,items]=regData(symbol,range);
-
+dir=[symbol '.mat'];
+load(dir)
 
 %% Initialize Variables.
 
 % initial price, usable money
+items=size(Close,1);
 p0=Open(1);
 iniStocks=fix(Money*percent/(p0*100));
 MoneyFree=Money-p0*iniStocks*100*1.005;
