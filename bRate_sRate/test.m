@@ -21,12 +21,15 @@ items=size(Close,1);
 p0=Open(1);
 iniStocks=fix(Money*percent/(p0*100));
 MoneyFree=Money-p0*iniStocks*100*1.005;
-% capital
+
+% capital-movement of our Capital.
 Capital=Close(1)*iniStocks*100+MoneyFree;
 capital=[Capital];
+
 % value
 Value=Close(1)*100;
-% cost/share
+
+% cost/share ³É±¾
 S_cost=p0*1.005;
 
 % a vecot contains the buy & sell

@@ -62,13 +62,13 @@ fprintf('\n');
 
 %% Predict and test
 
-% part #1
+% part #1  ???????????
 predict_y1=X(1:end-1,:)*theta;
 y=y(1:end-1);
 test1=[predict_y1,y];
 error1=mean(abs(test1(:,2)-test1(:,1))./y);
 
-% part #2
+% part #2  ???????????
 predict_y2=X_test(1:end-1,:)*theta;
 test2=[predict_y2,y_test(1:end-1)];
 error2=mean(abs(test2(:,2)-test2(:,1))./y_test(1:end-1));
