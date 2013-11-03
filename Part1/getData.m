@@ -40,7 +40,7 @@ row=size(Date, 1);
 
 
 for i = 1:row
-    Date_temp(i, 1)=datenum(cell2mat(Date(i)), 'yyyy-mm-dd');
+%     Date_temp(i, 1)=datenum(cell2mat(Date(i)), 'yyyy-mm-dd');
     AdjClose_temp(i, 1)=str2num(cell2mat(AdjClose(i)));
     Open_temp(i,1)=str2num(cell2mat(Open(i)));
     High_temp(i,1)=str2num(cell2mat(High(i)));
@@ -48,7 +48,7 @@ for i = 1:row
     Volume_temp(i,1)=str2num(cell2mat(Volume(i)));
 end
 
-DateV=Date_temp(end:-1:1);
+% DateV=Date_temp(end:-1:1);
 Close=AdjClose_temp(end:-1:1);
 Open=Open_temp(end:-1:1);
 High=High_temp(end:-1:1);
