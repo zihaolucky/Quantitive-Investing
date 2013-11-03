@@ -20,6 +20,7 @@ items=size(Close,1);
 p0=Open(1);
 iniStocks=fix(Money*percent/(p0*100));
 MoneyFree=Money-p0*iniStocks*100*1.005;
+MoneyFree_track = [MoneyFree];
 % capital
 Capital=Close(1)*iniStocks*100+MoneyFree;
 capital=[Capital];
@@ -27,7 +28,7 @@ capital=[Capital];
 Value=Close(1)*100;
 % cost/share
 S_cost=p0*1.005;
-S_cost_track=[];
+S_cost_track=[S_cost];
 % a vecot contains the buy & sell
 pBuy=[repmat(p0,[1,iniStocks])];
 pSell=[];
@@ -61,6 +62,7 @@ for i=2:items
         fprintf('    Buy!\n')
         fprintf('Price: %2.2f\n',pBuy(end))
         MoneyFree=MoneyFree-pBuy(end)*fix(MoneyFree*percent/(Open(i)*100))*100*1.005;
+        MoneyFree_track=[MoneyFree_track, MoneyFree];
         bDay=[bDay,i];
         S_cost=mean(pBuy);
         S_cost_track=[S_cost_track,S_cost];
@@ -73,6 +75,7 @@ for i=2:items
             fprintf('    Buy!\n')
             fprintf('Price: %2.2f\n',pBuy(end))
             MoneyFree=MoneyFree-pBuy(end)*n*100*1.005;
+            MoneyFree_track=[MoneyFree_track, MoneyFree];
             bDay=[bDay,i];
             S_cost=mean(pBuy);
             S_cost_track=[S_cost_track,S_cost];
@@ -84,6 +87,7 @@ for i=2:items
             fprintf('    Sell!\n')
             fprintf('Price: %2.2f\n\n',pBuy(end)*(1+sRate))
             MoneyFree=MoneyFree+pBuy(end)*n*100*0.995;
+            MoneyFree_track=[MoneyFree_track, MoneyFree];
             pBuy=[pBuy(1:end-n)];
             S_cost=(sum(pBuy)*100-profit(i))/(size(pBuy,2)*100);
             S_cost_track=[S_cost_track,S_cost];
@@ -95,6 +99,7 @@ for i=2:items
             fprintf(' Arbitrary.   Sell Out !\n')
             fprintf('Price: %2.2f\n\n',Open(i))
             MoneyFree=MoneyFree+Open(i)*size(pBuy,2)*100*0.995;
+            MoneyFree_track=[MoneyFree_track, MoneyFree];
             pBuy=[];
             S_cost=0;
             S_cost_track=[S_cost_track,S_cost];
@@ -107,6 +112,7 @@ for i=2:items
             fprintf('    Sell Out ! STOP LOSS...\n')
             fprintf('Price: %2.2f\n\n',Open(i))
             MoneyFree=MoneyFree+Open(i)*size(pBuy,2)*100*0.995;
+            MoneyFree_track=[MoneyFree_track, MoneyFree];
             pBuy=[];
             S_cost=0;
             S_cost_track=[S_cost_track,S_cost];
@@ -115,7 +121,8 @@ for i=2:items
         end
     end
     
-
+    S_cost_track=[S_cost_track,S_cost_track(end)];
+    MoneyFree_track=[MoneyFree_track, MoneyFree_track(end)];
     
     Value=(Close(i)*size(pBuy,2)*100);
     Capital=Value+MoneyFree;
@@ -156,11 +163,21 @@ Moneyfree=Money-N*Open(1)*100;
 plot(1:items,capital,'linewidth',1.3,'color','b')
 hold on
 plot(1:items,Close*100*N+Moneyfree,'linewidth',1.3,'color','r')
+
 title('Comparison','FontSize',12)
 % xlabel({'Start from',s_date},'FontSize',12)
 ylabel('Capital','FontSize',12)
 legend('With Stretegy','Normal Style')
 
 figure(2);
-size(S_cost_track)
-% plot(1:items,S_cost_track,'linewidth',1.3,'color','r')
+subplot(2,1,1);
+plot(1:items,capital,'linewidth',1.3,'color','b')
+hold on
+plot(1:items,Close*100*N+Moneyfree,'linewidth',1.3,'color','r')
+plot(sDay,capital(sDay),'r.')
+plot(bDay,capital(bDay),'g.')
+legend('With Stretegy','Normal Style','sell','buy')
+
+subplot(2,1,2);
+plot(1:size(MoneyFree_track,2),MoneyFree_track,'MarkerFaceColor',[1 0.75 0.75])
+title('MoneyFree_track','FontSize',12)
