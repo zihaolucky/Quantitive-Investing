@@ -13,11 +13,11 @@ function [Open,High,Low,Close,row]=getData(StockName,StartDate,EndDate)
 %
 %     getData('000002.sz,600016.ss',[2013,5,1],[2013,7,1],'C:\StockData');
 
-%数据时间区间
+%????????????
 startdate=StartDate;
 enddate=EndDate;
 
-%字符串变化
+%??????????
 ms=num2str(str2num(datestr(startdate, 'mm'))-1);
 ds=datestr(startdate, 'dd');
 ys=datestr(startdate, 'yyyy');
@@ -35,7 +35,9 @@ AdjClose(1)=[];
 Open(1)=[];
 High(1)=[];
 Low(1)=[];
+Volume(1)=[];
 row=size(Date, 1);
+
 
 for i = 1:row
     Date_temp(i, 1)=datenum(cell2mat(Date(i)), 'yyyy-mm-dd');
@@ -43,6 +45,7 @@ for i = 1:row
     Open_temp(i,1)=str2num(cell2mat(Open(i)));
     High_temp(i,1)=str2num(cell2mat(High(i)));
     Low_temp(i,1)=str2num(cell2mat(Low(i)));
+    Volume_temp(i,1)=str2num(cell2mat(Volume(i)));
 end
 
 DateV=Date_temp(end:-1:1);
@@ -50,10 +53,11 @@ Close=AdjClose_temp(end:-1:1);
 Open=Open_temp(end:-1:1);
 High=High_temp(end:-1:1);
 Low=Low_temp(end:-1:1);
+Volume=Volume_temp(end:-1:1);
 items=size(Close);
 
 % save the data as .mat
 filename=[StockName, '.mat'];
-save(filename,'Open','High','Low','Close','items') ;
+save(filename,'Open','High','Low','Close','Volume','items') ;
 
 end
