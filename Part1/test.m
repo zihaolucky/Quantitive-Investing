@@ -118,6 +118,12 @@ for i=2:items
             S_cost_track=[S_cost_track,S_cost];
             sDay=[sDay,i];
             fprintf('Cost/share: %2.2f \n',S_cost)
+            
+            % Attention! Here, it's wired to see a serious cases of STOP
+            % LOSS, so I tried to figure out. Here's the reason:
+            %    we set the condition: Capital<Money*(1-stoploss) and we
+            %    haven't update the Money when STOP LOSS happen.
+            Money = Capital;
         end
     end
     
@@ -174,10 +180,12 @@ subplot(2,1,1);
 plot(1:items,capital,'linewidth',1.3,'color','b')
 hold on
 plot(1:items,Close*100*N+Moneyfree,'linewidth',1.3,'color','r')
-plot(sDay,capital(sDay),'r.')
-plot(bDay,capital(bDay),'g.')
+plot(sDay,capital(sDay),'.','Color',[1 0 0.7])
+% plot(bDay,capital(bDay),'g*')
 legend('With Stretegy','Normal Style','sell','buy')
 
 subplot(2,1,2);
-plot(1:size(MoneyFree_track,2),MoneyFree_track,'MarkerFaceColor',[1 0.75 0.75])
+plot(1:size(MoneyFree_track,2),MoneyFree_track,'Color',[1 0.75 0.75],'LineWidth',...
+    1.3)
 title('MoneyFree_track','FontSize',12)
+hold off
