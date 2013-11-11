@@ -1,4 +1,4 @@
-function [predict_y2,x]=ex12(symbol,ma1,ma2,ma3,percent)
+function predict_y2=ex12(symbol,ma1,ma2,ma3,percent,add)
 %% Instruction
 % The ex1.m focus on using the linear regression method to predict the
 % price, while testing its performance in test set, it can keep the track
@@ -7,7 +7,7 @@ function [predict_y2,x]=ex12(symbol,ma1,ma2,ma3,percent)
 
 %% ================ Part 1: Feature Normalization ================
 
-fprintf('Loading data ...\n');
+% fprintf('Loading data ...\n');
 %% Load Data
 %getData(symbol,'1/1/2011','1/1/2012');
 dir_data=[symbol,'.mat'];
@@ -16,16 +16,15 @@ load(dir_data);
 %% Data Initialization
 [Short,Med,Long]=SimpleMovingAverage(Close,[ma1 ma2 ma3]);
 tomorrow=Close(2:end);
-data=[Close(1:end-1),Short(1:end-1),Med(1:end-1),Long(1:end-1),...
-    Volume(1:end-1),tomorrow];
+data=[Close(1:end-1),Short(1:end-1),Med(1:end-1),Long(1:end-1),tomorrow];
 data=data(ma3+1:end,:);
 
-X = data((0.9-percent)*end+1:0.9*end,1:5);
-x = data((0.9-percent)*end+1:0.9*end+1,1);
+X = data((0.9-percent)*end+1:0.9*end+add,1:4);
+x = data((0.9-percent)*end+1:0.9*end+add+1,1);
 
-X_test = data(0.9*end:end, 1:5);
-y = data((0.9-percent)*end+1:0.9*end, 6);
-y_test = data(0.9*end:end, 6);
+X_test = data(0.9*end:end, 1:4);
+y = data((0.9-percent)*end+1:0.9*end+add, 5);
+y_test = data(0.9*end:end, 5);
 m = length(y);
 n = length(y_test);
 
@@ -33,6 +32,7 @@ n = length(y_test);
 %fprintf('Normalizing Features ...\n');
 
 [X mu sigma] = featureNormalize(X);
+X_test = featureNormalize(X_test);
 
 % Add intercept term to X
 X = [ones(m, 1) X];
@@ -47,8 +47,8 @@ alpha = 0.01;
 num_iters = 400;
 
 % Init Theta and Run Gradient Descent 
-theta = zeros(6, 1);
-[theta, J_history] = gradientDescentMulti(X, y, theta, alpha, num_iters);
+theta = zeros(5, 1);
+[theta, J_history] = gradientDescentMulti12(X, y, theta, alpha, num_iters);
 
 % % Plot the convergence graph
 % figure;
@@ -71,6 +71,7 @@ theta = zeros(6, 1);
 
 % part #2
 predict_y2=X(end,:)*theta;
+% a=[predict_y2,x(end),(predict_y2-x(end))/x(end)];
 %test2=[predict_y2,y_test(1:end-1)];
 %error2=mean(abs(test2(:,2)-test2(:,1))./y_test(1:end-1));
 
