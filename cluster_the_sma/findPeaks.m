@@ -1,13 +1,19 @@
-function findPeaks(symbol,t_start,t_end)
+function findPeaks(symbol)
 
 %% Data import
-[Open,High,Low,Close,items]=getData(symbol,t_start,t_end);
-[Short,Med,Long]=SimpleMovingAverage(Close,[5 20 60]);
+% [Open,High,Low,Close,items]=getData(symbol,t_start,t_end);
+dir_data=[symbol,'.mat'];
+load(dir_data);
+
+[Short,Med,Long]=SimpleMovingAverage(Close,[5 14 20]);
+
+
 [gra_S,gra_M,gra_L]=graMA(Short,Med,Long);
 
 
 %% Calculation
 % lowest and highest
+Close = Close(61:end);
 low_index=find(diff(sign(diff(Close)))==2)+1;
 high_index=find(diff(sign(diff(Close)))==-2)+1;
 

@@ -1,7 +1,9 @@
-function searchPeaks(symbol,t_start,t_end)
+function searchPeaks(symbol)
 
 %% Data import
-[Open,High,Low,Close,items]=getData(symbol,t_start,t_end);
+% [Open,High,Low,Close,items]=getData(symbol,t_start,t_end);
+dir_data=[symbol,'.mat'];
+load(dir_data);
 
 %% Calculation
 % lowest and highest, with 5% fluctuation.
