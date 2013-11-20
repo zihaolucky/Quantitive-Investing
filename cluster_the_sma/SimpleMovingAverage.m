@@ -29,8 +29,8 @@ if m==3
     Med(1:indicator(2)-1)=NaN;
     Long(1:indicator(3)-1)=NaN;
 end
-
-Short=Short(indicator(3):end);
-Med=Med(indicator(3):end);
-Long=Long(indicator(3):end);
+% 
+% Short=Short(indicator(3):end);
+% Med=Med(indicator(3):end);
+% Long=Long(indicator(3):end);
 
