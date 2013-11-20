@@ -1,7 +1,13 @@
-function [UP,DOWN]=cluster(Close)
+function [UP,DOWN]=cluster(symbol)
 
 %% Data import
-[Short,Med,Long]=SimpleMovingAverage(Close,[5 20 60]);
+
+% dir_data=[symbol,'.mat'];
+
+load('600592.ss.mat');
+
+
+[Short,Med,Long]=SimpleMovingAverage(Close,[5 14 20]);
 [gra_S,gra_M,gra_L]=graMA(Short,Med,Long);
 
 
@@ -54,3 +60,12 @@ down_L=gra_L(down_index);
 down_M=gra_M(down_index);
 DOWN=[down_S,down_M,down_L];
 
+plot(1:size(Close,1),Close,'r-');
+hold on
+plot(high_index,Close(high_index),'b.')
+plot(low_index,Close(low_index),'g.')
+
+
+% Save data
+filename=['up_down_index', '.mat'];
+save(filename,'up_index','down_index');

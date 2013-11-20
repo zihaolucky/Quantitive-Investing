@@ -35,5 +35,5 @@ y=[repmat(0,[n,1]);repmat(1,[m,1])];
 
 % Save data
 filename=['data_test1', '.mat'];
-save(filename,'X','y');
+save(filename,'X','y','low_index','high_index');
 end
