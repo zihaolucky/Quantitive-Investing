@@ -1,7 +1,7 @@
-function [best_buy,best_sell]=para_search2(symbol)
+function [best_buy,best_sell,TotalCapitals]=para_search2(symbol)
 %% searching the best parameter
-sRate=[0.02:0.01:0.08];
-bRate=[0.02:0.01:0.08];
+sRate=[0.01:0.005:0.08];
+bRate=[0.01:0.005:0.08];
 
 n=size(bRate,2);
 m=size(sRate,2);
@@ -21,6 +21,7 @@ end
 
 best_buy=bRate(ind_b);
 best_sell=sRate(ind_s);
+
 
 %% save data
 filename=['result', '.mat'];

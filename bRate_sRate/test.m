@@ -21,6 +21,7 @@ items=size(Close,1);
 p0=Open(1);
 iniStocks=fix(Money*percent/(p0*100));
 MoneyFree=Money-p0*iniStocks*100*1.005;
+MoneyFree_track = [MoneyFree];
 
 % capital-movement of our Capital.
 Capital=Close(1)*iniStocks*100+MoneyFree;
@@ -31,6 +32,7 @@ Value=Close(1)*100;
 
 % cost/share ³É±¾
 S_cost=p0*1.005;
+S_cost_track=[S_cost];
 
 % a vecot contains the buy & sell
 pBuy=[repmat(p0,[1,iniStocks])];
@@ -65,6 +67,7 @@ for k=2:items
         if S_cost*(1-bRate)>Low(k) && MoneyFree>S_cost*(1-bRate)*n*100*1.005
             pBuy=[pBuy,repmat(pBuy(end)*(1-bRate),[1,n])];
             MoneyFree=MoneyFree-pBuy(end)*n*100*1.005;
+            MoneyFree_track=[MoneyFree_track, MoneyFree];
             bDay=[bDay,k];
             S_cost=mean(pBuy);
         end
@@ -73,6 +76,7 @@ for k=2:items
             profit(k)=pBuy(end)*sRate*n*100*0.995;
             sDay=[sDay,k];
             MoneyFree=MoneyFree+pBuy(end)*n*100*0.995;
+            MoneyFree_track=[MoneyFree_track, MoneyFree];
             pBuy=[pBuy(1:end-n)];
             S_cost=(sum(pBuy)*100-profit(k))/(size(pBuy,2)*100);
         end
@@ -80,6 +84,7 @@ for k=2:items
         if S_cost<=Open(k)*(1-arbitrage) && S_cost>0
             profit(k)=(Open(k)-S_cost)*size(pBuy,2)*100*n;
             MoneyFree=MoneyFree+Open(k)*size(pBuy,2)*100*0.995;
+            MoneyFree_track=[MoneyFree_track, MoneyFree];
             pBuy=[];
             S_cost=0;
             sDay=[sDay,k];
@@ -88,12 +93,15 @@ for k=2:items
         if Capital<Money*(1-stoploss) && S_cost>0
             profit(k)=(Open(k)-S_cost)*size(pBuy,2)*100;
             MoneyFree=MoneyFree+Open(k)*size(pBuy,2)*100*0.995;
+            MoneyFree_track=[MoneyFree_track, MoneyFree];
             pBuy=[];
             S_cost=0;
             sDay=[sDay,k];
         end
     end
     
+    S_cost_track=[S_cost_track,S_cost_track(end)];
+    MoneyFree_track=[MoneyFree_track, MoneyFree_track(end)];
     
     Value=(Close(k)*size(pBuy,2)*100);
     Capital=Value+MoneyFree;
