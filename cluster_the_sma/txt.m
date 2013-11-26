@@ -1,4 +1,4 @@
-function txt(file,m,n)
+function txt(file,n)
 
 % configuration: cal_instance.m
 
@@ -10,15 +10,26 @@ lable = train_data(:,1);
 
 fid1 = fopen('svm_train.txt', 'wt');
 
+m = size(train_data,1);
 
-for i=1:m
+
+for i=1:m-50
     fprintf(fid1, '%d 1:%f 2:%f 3:%f', lable(i), instance(i,1), instance(i,2), instance(i,3));
     fprintf(fid1, '\n');
 end
-
+% for i=1:m
+%     fprintf(fid1, '%d 1:%f 2:%f', lable(i), instance(i,1), instance(i,3));
+%     fprintf(fid1, '\n');
+% end
 
 fid2 = fopen('svm_test.txt', 'wt');
-for i=m:m+n
+for i=m-n:m
     fprintf(fid2, '%d 1:%f 2:%f 3:%f', lable(i), instance(i,1), instance(i,2), instance(i,3));
     fprintf(fid2, '\n');
 end
+
+% fid2 = fopen('svm_test.txt', 'wt');
+% for i=m:m+n
+%     fprintf(fid2, '%d 1:%f 2:%f', lable(i), instance(i,1), instance(i,3));
+%     fprintf(fid2, '\n');
+% end
