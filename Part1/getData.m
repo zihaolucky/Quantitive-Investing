@@ -1,4 +1,4 @@
-function [Open,High,Low,Close,row]=getData(StockName,StartDate,EndDate)
+    function [Open,High,Low,Close,row]=getData(StockName,StartDate,EndDate)
 %% ==================* Quantitive-Investing *==============================
 %        https://github.com/zihaolucky/Quantitive-Investing
 %
@@ -31,7 +31,7 @@ s=urlread(url2Read);
 [Date Open High Low Close Volume AdjClose]=strread (s, '%s %s %s %s %s %s %s', 'delimiter', ',');
 
 Date(1)=[];
-AdjClose(1)=[];
+Close(1)=[];
 Open(1)=[];
 High(1)=[];
 Low(1)=[];
@@ -41,7 +41,7 @@ row=size(Date, 1);
 
 for i = 1:row
 %     Date_temp(i, 1)=datenum(cell2mat(Date(i)), 'yyyy-mm-dd');
-    AdjClose_temp(i, 1)=str2num(cell2mat(AdjClose(i)));
+    Close_temp(i, 1)=str2num(cell2mat(Close(i)));
     Open_temp(i,1)=str2num(cell2mat(Open(i)));
     High_temp(i,1)=str2num(cell2mat(High(i)));
     Low_temp(i,1)=str2num(cell2mat(Low(i)));
@@ -49,7 +49,7 @@ for i = 1:row
 end
 
 % DateV=Date_temp(end:-1:1);
-Close=AdjClose_temp(end:-1:1);
+Close=Close_temp(end:-1:1);
 Open=Open_temp(end:-1:1);
 High=High_temp(end:-1:1);
 Low=Low_temp(end:-1:1);
