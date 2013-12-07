@@ -1,4 +1,4 @@
-function ex_svm(symbol,m,n)
+function [predict_label2, label2, a2] = ex_svm(symbol,m,n)
 % this function contains:
 %   peaks.m -> cal_instance.m
 
@@ -21,12 +21,11 @@ Close = Close( end-m-n-28:end );
 [label2, instance2] = libsvmread('svm_test.txt');
 
 model = svmtrain(label, instance,'-c 2048 -g 2');
-[predict_label, accuracy, a] = svmpredict(label,instance,model);
+[predict_label, accuracy, a1] = svmpredict(label,instance,model);
 
-[predict_label2, accuracy2, a] = svmpredict(label2,instance2,model);
-result1 = [predict_label, label]
-up_index';
-result2 = [predict_label2, label2]
+[predict_label2, accuracy2, a2] = svmpredict(label2,instance2,model);
+result1 = [predict_label, label, a1];
+result2 = [predict_label2, label2, a2]
 
 
 filename=['svm_result.mat'];
