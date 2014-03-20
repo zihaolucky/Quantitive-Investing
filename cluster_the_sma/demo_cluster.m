@@ -62,11 +62,11 @@ fprintf('Lowest plotted. Press return to continue.\n\n')
 scatter3(high_S,high_M,high_L,'MarkerEdgeColor','k','MarkerFaceColor',[1 .75 .75])
 fprintf('Highest plotted. Press return to continue.\n\n')
 %pause;
-scatter3(up_S,up_M,up_L,'MarkerEdgeColor','k','MarkerFaceColor',[1 1 .25])
-fprintf('Up plotted. Press return to continue.\n\n')
-%pause;
-scatter3(down_S,down_M,down_L,'MarkerEdgeColor','k','MarkerFaceColor',[1 0 .25])
-fprintf('Down plotted. Press return to continue.\n\n')
+% scatter3(up_S,up_M,up_L,'MarkerEdgeColor','k','MarkerFaceColor',[1 1 .25])
+% fprintf('Up plotted. Press return to continue.\n\n')
+% %pause;
+% scatter3(down_S,down_M,down_L,'MarkerEdgeColor','k','MarkerFaceColor',[1 0 .25])
+% fprintf('Down plotted. Press return to continue.\n\n')
 
 %% Save data
 filename=['highest_lowest', '.mat'];
