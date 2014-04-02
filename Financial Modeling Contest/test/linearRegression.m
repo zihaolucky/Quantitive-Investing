@@ -1,20 +1,23 @@
-function [theta, y_test, X_test] = linearRegression(lambda)
-load('data_minute.mat');
-ma1 = 5; ma2 = 20; ma3 = 60;
+function [theta, y_test, X_test, minute_bidPrince, minute_askPrince, train_error] = linearRegression(lambda)
+load('data_3minute_2011.mat');
+ma1 = 3; ma2 = 5; ma3 = 7;
 
 [Short,Med,Long] = SimpleMovingAverage(Close,[ma1 ma2 ma3]);
 
-to_tomorrow = Close(1:end);
+tomorrow = Close(2:end);
 
-X = [Short(1:end),Med(1:end),Long(1:end)];
+minute_askPrince = minute_askPrince(ma3:end-1);
+minute_bidPrince = minute_bidPrince(ma3:end-1);
+X = [Short(1:end-1),Med(1:end-1),Long(1:end-1)];
 X = X(ma3:end,:);
-y = to_tomorrow(ma3:end);
+y = tomorrow(ma3:end);
 
-X_train = X(1:500,:);
-y_train = y(1:500);
+X_train = X(1:1000,:);
+y_train = y(1:1000);
 
-X_test = X(1001:20000,:);
-y_test = y(1001:20000);
+X_test = X(1001:end,:);
+y_test = y(1001:end);
+
 
 %y_test = data(0.9*end:end, 5);
 m = size(X_train,1);
@@ -33,11 +36,12 @@ Exp = (repmat(m,[m,1])-[1:m]');
 
 cvx_begin
     variable theta(4)
-%       minimize (sum(Exp.*(X_train*theta-y_train).^2)+0.5*norm(theta))
-%     minimize (sum(X_train*theta - y_train).^2/m + lambda*sum((theta).^2))
-    minimize ( sum(abs(X_train*theta - y_train))/m + lambda*norm(theta) )
-%     subject to
-%         theta(2)<=0.2
+%     minimize (sum(Exp.*(X_train*theta-y_train).^2)+lambda*norm(theta))
+%     minimize (sum((X_train*theta - y_train).^2)/m + lambda*sum((theta).^2))
+
+%     minimize ( sum(abs(X_train*theta - y_train))/m + lambda*norm(theta) )
+    minimize ( sum(abs(X_train*theta - y_train))/m + lambda*sum(theta.^2))
+%     minimize ( sum(abs(X_train*theta - y_train))/m )
 cvx_end
 
 
@@ -52,7 +56,8 @@ cvx_end
 % % hold on
 % % plot(turning_point, y_test(turning_point), 'ro');
 % 
-% total_error = sum(abs(y_train - X_train*theta))/n;
+
+train_error = sum(abs(y_train - X_train*theta))/n;
 
 % 
 % 

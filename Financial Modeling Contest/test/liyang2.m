@@ -1,9 +1,9 @@
 %% liyang
 clc;clear;close all;
 % function MatlabTradingDemo
-load data_minute
+load data_minute_2012
 
-IFdata = Close(1001:20000);%793*1
+IFdata = Close(1001:1500);%793*1
 ShortLen=5;
 LongLen=20;
 [MA5,MA20]=movavg(IFdata,ShortLen,LongLen);%tsmovavg
@@ -62,7 +62,7 @@ for t=LongLen:length(IFdata)
         %平多头开空头1手
         if Pos(t-1)==1
             Pos(t)=-1;
-            Return(t)=(IFdata(t)-IFdata(t-1))*scale;
+            ReturnD(t)=(IFdata(t)-IFdata(t-1))*scale;
             text(t,IFdata(t),'\leftarrow平多开空1手','FontSize',8);
             plot(t,IFdata(t),'rd','markersize',8);
             continue;
